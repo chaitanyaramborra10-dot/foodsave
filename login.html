@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | FoodSave</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .auth-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        .google-btn {
+            width: 100%;
+            border: 1px solid var(--border);
+            background: white;
+            color: var(--text);
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0.875rem;
+        }
+
+        .google-btn:hover {
+            background: var(--surface);
+            transform: translateY(-1px);
+        }
+
+        .divider {
+            margin: 2rem 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .divider span {
+            position: relative;
+            z-index: 2;
+            background: white;
+            padding: 0 1rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <i data-lucide="leaf"></i>
+                FoodSave
+            </a>
+        </div>
+    </nav>
+
+    <main class="auth-container">
+        <div class="auth-card">
+            <h1 style="margin-bottom: 0.5rem;">Welcome Back</h1>
+            <p style="color: var(--text-muted);">Join the movement to reduce food waste.</p>
+
+            <button id="loginBtn" class="google-btn" onclick="simulateLogin()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google">
+                Continue with Google
+            </button>
+
+            <div id="protocolWarning"
+                style="display: none; color: #ef4444; background: #fee2e2; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.875rem;">
+                <i data-lucide="alert-triangle" size="16"></i>
+                <b>Important:</b> Firebase Auth won't work using <code>file://</code>. Please run a local server (e.g.,
+                <code>npx serve</code>).
+            </div>
+
+            <div class="divider">
+                <span>Firebase Auth Placeholder</span>
+            </div>
+
+            <p style="font-size: 0.875rem; color: var(--text-muted);">
+                By continuing, you agree to our <a href="#" style="color: var(--primary);">Terms of Service</a> and <a
+                    href="#" style="color: var(--primary);">Privacy Policy</a>.
+            </p>
+        </div>
+    </main>
+
+    <script>
+        if (window.location.protocol === 'file:') {
+            document.getElementById('protocolWarning').style.display = 'block';
+        }
+    </script>
+
+    <script type="module">
+        import { auth, googleProvider, signInWithPopup } from './js/firebase-config.js';
+        lucide.createIcons();
+
+        window.simulateLogin = async function () {
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.innerText = "Connecting...";
+
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                window.location.href = 'role.html';
+            } catch (error) {
+                console.error("Auth error:", error);
+                alert("Login Error: " + error.message + "\n\nTip: Make sure 'localhost' or your domain is added to 'Authorized domains' in Firebase Console Settings.");
+                btn.disabled = false;
+                btn.innerHTML = `<img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" alt="Google"> Continue with Google`;
+            }
+        }
+    </script>
+</body>
+
+</html>

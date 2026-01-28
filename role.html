@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Your Role | FoodSave</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .role-container {
+            min-height: calc(100vh - 80px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            padding: 2rem;
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .role-card {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .role-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .role-card h2 {
+            margin-bottom: 1rem;
+        }
+
+        .role-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 640px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <i data-lucide="leaf"></i>
+                FoodSave
+            </a>
+        </div>
+    </nav>
+
+    <main class="role-container">
+        <div class="container">
+            <h1 style="text-align: center; margin-bottom: 3rem;">How will you use FoodSave?</h1>
+            <div class="role-grid">
+                <div class="role-card" onclick="selectRole('provider')">
+                    <div class="role-icon"><i data-lucide="store" size="40"></i></div>
+                    <h2>Food Provider</h2>
+                    <p>Hostels, Canteens, Restaurants, or Event Organizers with surplus food to share.</p>
+                </div>
+                <div class="role-card" onclick="selectRole('ngo')">
+                    <div class="role-icon"><i data-lucide="heart" size="40"></i></div>
+                    <h2>NGO / Receiver</h2>
+                    <p>Verified organizations and community kitchens looking for food donations.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, db, doc, setDoc } from './js/firebase-config.js';
+        lucide.createIcons();
+
+        window.selectRole = async function (role) {
+            const user = auth.currentUser;
+            if (user) {
+                try {
+                    // Store role in Firestore user profile
+                    await setDoc(doc(db, "users", user.uid), {
+                        uid: user.uid,
+                        displayName: user.displayName,
+                        email: user.email,
+                        photoURL: user.photoURL,
+                        role: role,
+                        updatedAt: new Date()
+                    }, { merge: true });
+
+                    localStorage.setItem('userRole', role);
+
+                    if (role === 'provider') {
+                        window.location.href = 'provider-dashboard.html';
+                    } else {
+                        window.location.href = 'ngo-dashboard.html';
+                    }
+                } catch (error) {
+                    console.error("Error saving role:", error);
+                    alert("Error saving your choice. Please try again.");
+                }
+            } else {
+                // If not logged in, redirect back to login
+                window.location.href = 'login.html';
+            }
+        }
+    </script>
+</body>
+
+</html>

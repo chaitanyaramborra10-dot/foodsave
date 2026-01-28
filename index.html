@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodSave | Turning Surplus Food Into Social Impact</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <i data-lucide="leaf"></i>
+                FoodSave
+            </a>
+            <div class="nav-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#impact">Impact</a>
+                <a href="#about">About</a>
+                <a href="login.html" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container text-center">
+            <h1 class="animate-up">Turning Surplus Food Into <span style="color: var(--primary);">Social Impact</span></h1>
+            <p class="animate-up" style="animation-delay: 0.1s;">Connect hostels, restaurants, and event organizers with local NGOs to ensure no good meal goes to waste.</p>
+            <div class="hero-btns animate-up" style="animation-delay: 0.2s;">
+                <a href="login.html" class="btn btn-primary">Start Sharing Food</a>
+                <a href="#how-it-works" class="btn btn-outline">Learn How It Works</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="impact" class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="meals-saved">25k+</h3>
+                    <p>Meals Saved</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="verified-ngos">150+</h3>
+                    <p>Verified NGOs</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="co2-prevented">12t</h3>
+                    <p>CO₂ Prevented</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Simple Process, Massive Impact</h2>
+                <p style="color: var(--text-muted);">How FoodSave bridges the gap between surplus and need.</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2.5rem;">
+                <div class="card">
+                    <div style="color: var(--primary); margin-bottom: 1.5rem;"><i data-lucide="upload-cloud" size="48"></i></div>
+                    <h3>Provide Surplus</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">Post your surplus food details including quantity, type, and pickup window.</p>
+                </div>
+                <div class="card">
+                    <div style="color: var(--primary); margin-bottom: 1.5rem;"><i data-lucide="search" size="48"></i></div>
+                    <h3>NGO Discovery</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">Registered NGOs get real-time alerts for available food in their vicinity.</p>
+                </div>
+                <div class="card">
+                    <div style="color: var(--primary); margin-bottom: 1.5rem;"><i data-lucide="truck" size="48"></i></div>
+                    <h3>Seamless Pickup</h3>
+                    <p style="color: var(--text-muted); margin-top: 1rem;">Direct communication for coordination and efficient redistribution.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="logo footer-logo">
+                        <i data-lucide="leaf"></i>
+                        FoodSave
+                    </div>
+                    <p class="footer-text">Empowering communities to reduce food waste and fight hunger through technology and transparency.</p>
+                </div>
+                <div>
+                    <h4>Platform</h4>
+                    <ul class="footer-text" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><a href="#">For Providers</a></li>
+                        <li><a href="#">For NGOs</a></li>
+                        <li><a href="#">Safety Guidelines</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <ul class="footer-text" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Impact</h4>
+                    <ul class="footer-text" style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                        <li><a href="#">Success Stories</a></li>
+                        <li><a href="#">Data & Metrics</a></li>
+                        <li><a href="#">Partners</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+                &copy; 2026 FoodSave redistribution platform. Built for social impact.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Surplus Food | FoodSave</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .location-box {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .location-status {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body style="background: var(--surface);">
+    <nav>
+        <div class="container nav-content">
+            <a href="provider-dashboard.html" class="logo">
+                <i data-lucide="leaf"></i>
+                FoodSave
+            </a>
+            <div class="nav-links">
+                <a href="provider-dashboard.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">Back to
+                    Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="padding: 4rem 1.5rem;">
+        <div class="form-container">
+            <h1 style="margin-bottom: 0.5rem;">Post Surplus Food</h1>
+            <p style="color: var(--text-muted); margin-bottom: 2.5rem;">Every meal saved is a step towards a zero-waste
+                future.</p>
+
+            <form id="postFoodForm" onsubmit="handlePostSubmit(event)">
+                <div class="form-group">
+                    <label>Food Item Name</label>
+                    <input type="text" class="form-control" placeholder="e.g., Vegetable Biryani, Bread rolls" required>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Food Type</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="foodType" value="veg" checked> Veg
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="foodType" value="non-veg"> Non-Veg
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Quantity (No. of people served)</label>
+                        <input type="number" class="form-control" placeholder="e.g., 50" required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Preparation Time</label>
+                        <input type="datetime-local" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Window (Hours from now)</label>
+                        <select class="form-control" required>
+                            <option value="2">2 Hours</option>
+                            <option value="4">4 Hours</option>
+                            <option value="6">6 Hours</option>
+                            <option value="12">12 Hours</option>
+                            <option value="24">24 Hours</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Pickup Location</label>
+                    <input type="text" id="locationInput" class="form-control"
+                        placeholder="Enter full address or use GPS" required>
+                    <div class="location-box">
+                        <button type="button" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;"
+                            onclick="getLocation()">
+                            <i data-lucide="map-pin" size="16"></i>
+                            Use My Location
+                        </button>
+                        <span id="locationStatus" class="location-status">Location not detected</span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 2.5rem;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Post Food Now
+                        <i data-lucide="send" size="18"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script type="module">
+        import { auth, db, collection, addDoc, serverTimestamp } from './js/firebase-config.js';
+        lucide.createIcons();
+
+        window.getLocation = function () {
+            const status = document.getElementById('locationStatus');
+            const input = document.getElementById('locationInput');
+
+            if (!navigator.geolocation) {
+                status.textContent = 'Geolocation not supported';
+            } else {
+                status.textContent = 'Locating...';
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        status.textContent = `Located: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+                        input.value = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
+                    },
+                    (error) => status.textContent = 'Unable to retrieve location'
+                );
+            }
+        }
+
+        window.handlePostSubmit = async function (event) {
+            event.preventDefault();
+            const form = event.target;
+            const user = auth.currentUser;
+
+            if (!user) {
+                alert("Please login first!");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                const foodData = {
+                    name: form.querySelector('input[type="text"]').value,
+                    type: form.querySelector('input[name="foodType"]:checked').value,
+                    quantity: form.querySelector('input[type="number"]').value,
+                    prepTime: form.querySelector('input[type="datetime-local"]').value,
+                    expiryWindow: form.querySelector('select').value,
+                    location: document.getElementById('locationInput').value,
+                    providerId: user.uid,
+                    providerName: user.displayName,
+                    status: 'posted',
+                    createdAt: serverTimestamp()
+                };
+
+                await addDoc(collection(db, "food_posts"), foodData);
+                alert('Food posted successfully!');
+                window.location.href = 'provider-dashboard.html';
+            } catch (error) {
+                console.error("Error posting food:", error);
+                alert("Error: " + error.message);
+            }
+        }
+    </script>
+</body>
+
+</html>

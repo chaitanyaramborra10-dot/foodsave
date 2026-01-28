@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Impact | FoodSave</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .impact-hero {
+            background: var(--primary);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: -60px;
+        }
+
+        .impact-card {
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+
+        .impact-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--primary-light);
+            color: var(--primary);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .chart-container {
+            margin-top: 4rem;
+            background: white;
+            padding: 3rem;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            background: var(--surface);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed var(--border);
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <i data-lucide="leaf"></i>
+                FoodSave
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="impact.html" style="color: var(--primary);">Impact</a>
+                <a href="login.html" class="btn btn-primary">Join the Cause</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="impact-hero">
+        <div class="container">
+            <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">Real Change, Measurable Impact</h1>
+            <p style="font-size: 1.25rem; opacity: 0.9;">Tracking every meal saved and every gram of CO₂ prevented.</p>
+        </div>
+    </header>
+
+    <main class="container" style="padding-bottom: 100px;">
+        <div class="impact-grid">
+            <div class="impact-card">
+                <div class="impact-icon"><i data-lucide="utensils" size="32"></i></div>
+                <h2 style="font-size: 2.5rem; color: var(--primary);">25,482</h2>
+                <p style="color: var(--text-muted);">Meals Distributed</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-icon"><i data-lucide="cloud-rain" size="32"></i></div>
+                <h2 style="font-size: 2.5rem; color: var(--primary);">12.4</h2>
+                <p style="color: var(--text-muted);">Tons of CO₂ Prevented</p>
+            </div>
+            <div class="impact-card">
+                <div class="impact-icon"><i data-lucide="users" size="32"></i></div>
+                <h2 style="font-size: 2.5rem; color: var(--primary);">184</h2>
+                <p style="color: var(--text-muted);">Active Partners</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+                <div>
+                    <h3>Environmental Savings Trend</h3>
+                    <p style="color: var(--text-muted);">CO₂ emissions prevented over the last 6 months</p>
+                </div>
+                <button class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Download
+                    Report</button>
+            </div>
+            <div class="chart-placeholder">
+                <div style="text-align: center;">
+                    <i data-lucide="line-chart" size="48" style="margin-bottom: 1rem; opacity: 0.3;"></i>
+                    <p>Dynamic Analytics ready for Firestore Integration</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div style="text-align: center; color: var(--text-muted);">
+                <p>&copy; 2026 FoodSave redistribution platform. Built for social impact.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
