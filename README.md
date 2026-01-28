@@ -1,5 +1,6 @@
 # How to Run FoodSave Locally
 
+
 Because this app uses **Firebase** and **JavaScript Modules**, you cannot simply double-click the `index.html` file. Browsers block secure features (like Login) when you use the `file://` protocol.
 
 ### 🚀 The "One-Command" Fix
