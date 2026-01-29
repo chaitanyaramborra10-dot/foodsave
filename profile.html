@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | FoodSave</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid var(--border);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .main-content {
+            background: var(--surface);
+            padding: 2rem 3rem;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .role-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <aside class="sidebar">
+            <div class="logo" style="margin-bottom: 2.5rem;">
+                <i data-lucide="leaf"></i>
+                FoodSave
+            </div>
+            <nav id="sidebarNav"
+                style="flex-direction: column; height: auto; border: none; background: transparent; padding: 0;">
+                <!-- Navigation will be dynamically loaded based on role -->
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="profile-container">
+                <h1 style="margin-bottom: 2rem;">My Profile</h1>
+
+                <div class="profile-header">
+                    <div class="profile-avatar" id="profileAvatar">
+                        <i data-lucide="user" size="48"></i>
+                    </div>
+                    <div class="profile-info">
+                        <h2 id="profileName" style="margin-bottom: 0.5rem;">Loading...</h2>
+                        <p id="profileEmail" style="color: var(--text-muted); margin-bottom: 0.5rem;">Loading...</p>
+                        <span id="profileRole" class="role-badge">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <h3 style="margin-bottom: 1.5rem;">Account Information</h3>
+                    <div class="info-row">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value" id="infoName">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Email Address</span>
+                        <span class="info-value" id="infoEmail">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Account Type</span>
+                        <span class="info-value" id="infoRole">Loading...</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">User ID</span>
+                        <span class="info-value" id="infoUid"
+                            style="font-family: monospace; font-size: 0.875rem;">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <h3 style="margin-bottom: 1rem;">Account Actions</h3>
+                    <button class="btn btn-outline" onclick="handleLogout()" style="width: 100%; margin-top: 1rem;">
+                        <i data-lucide="log-out"></i>
+                        Sign Out
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { auth, db, doc, getDoc, onAuthStateChanged, signOut } from './js/firebase-config.js';
+        lucide.createIcons();
+
+        // Check authentication and load profile
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                await loadUserProfile(user);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function loadUserProfile(user) {
+            try {
+                // Get user data from Firestore
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                const userData = userDoc.exists() ? userDoc.data() : null;
+
+                // Extract user information
+                const displayName = user.displayName || user.email.split('@')[0];
+                const email = user.email;
+                const role = userData?.role || localStorage.getItem('userRole') || 'Unknown';
+                const uid = user.uid;
+
+                // Update profile header
+                document.getElementById('profileName').textContent = displayName;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('profileRole').textContent = role === 'provider' ? 'Food Provider' : role === 'ngo' ? 'NGO / Receiver' : role;
+
+                // Update profile avatar with first letter
+                const firstLetter = displayName.charAt(0).toUpperCase();
+                document.getElementById('profileAvatar').innerHTML = firstLetter;
+
+                // Update account information
+                document.getElementById('infoName').textContent = displayName;
+                document.getElementById('infoEmail').textContent = email;
+                document.getElementById('infoRole').textContent = role === 'provider' ? 'Food Provider' : role === 'ngo' ? 'NGO / Receiver' : role;
+                document.getElementById('infoUid').textContent = uid;
+
+                // Load appropriate sidebar navigation
+                loadSidebar(role);
+
+            } catch (error) {
+                console.error("Error loading profile:", error);
+                alert("Error loading profile data: " + error.message);
+            }
+        }
+
+        function loadSidebar(role) {
+            const sidebarNav = document.getElementById('sidebarNav');
+
+            if (role === 'provider') {
+                sidebarNav.innerHTML = `
+                    <a href="provider-dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+                    <a href="post-food.html" class="sidebar-link"><i data-lucide="plus-circle"></i> Post Food</a>
+                    <a href="provider-dashboard.html" class="sidebar-link"><i data-lucide="history"></i> My Food Posts</a>
+                    <a href="impact.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Impact</a>
+                    <a href="profile.html" class="sidebar-link active"><i data-lucide="user"></i> Profile</a>
+                    <div style="margin-top: auto;">
+                        <a href="index.html" class="sidebar-link" style="color: #ef4444;"><i data-lucide="log-out"></i> Logout</a>
+                    </div>
+                `;
+            } else if (role === 'ngo') {
+                sidebarNav.innerHTML = `
+                    <a href="ngo-dashboard.html" class="sidebar-link"><i data-lucide="layout-dashboard"></i> Available Food</a>
+                    <a href="my-claims.html" class="sidebar-link"><i data-lucide="package"></i> My Claims</a>
+                    <a href="impact.html" class="sidebar-link"><i data-lucide="bar-chart-3"></i> Impact</a>
+                    <a href="profile.html" class="sidebar-link active"><i data-lucide="user"></i> Profile</a>
+                    <div style="margin-top: auto;">
+                        <a href="index.html" class="sidebar-link" style="color: #ef4444;"><i data-lucide="log-out"></i> Logout</a>
+                    </div>
+                `;
+            }
+
+            lucide.createIcons();
+        }
+
+        // Logout handler
+        window.handleLogout = async function () {
+            if (confirm('Are you sure you want to sign out?')) {
+                try {
+                    await signOut(auth);
+                    localStorage.clear();
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error("Error signing out:", error);
+                    alert("Error signing out: " + error.message);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
